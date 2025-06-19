@@ -26,8 +26,11 @@ function Navbar() {
         </button>
         <div className="collapse navbar-collapse" id="main-navbar">
           <div className="navbar-nav">
-            <NavLink className="nav-link" aria-current="page" to="/">
+            <NavLink className="nav-link" aria-current="page" to="/home">
               Home
+            </NavLink>
+            <NavLink className="register-page" aria-current="page" to="/register">
+              Registro
             </NavLink>
           </div>
         </div>
