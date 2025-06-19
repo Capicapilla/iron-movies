@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 function RegisterPage() {
   const [form, setForm] = useState({
     name: "",
@@ -10,31 +9,40 @@ function RegisterPage() {
     password: "",
     repeatPassword: "",
     bio: "",
-    avatar: null,
+    avatar: "",
   });
 
+  const [errorPassword, setErrorPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
-    const { name, value, files } = event.target;
+    const { name, value } = event.target;
     setForm((prev) => ({
       ...prev,
-      [name]: files ? files[0] : value,
+      [name]: value,
     }));
   };
 
-    const navigate = useNavigate();
-
-    const handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Formulario de Registro Enviado con Éxito:", form);
 
+    if (form.password !== form.repeatPassword) {
+      setErrorPassword("Las contraseñas no coinciden");
+      return;
+    }
+
+    setErrorPassword("");
+    console.log("Formulario válido:", form);
     navigate("/profile");
-
   };
 
   return (
     <section className="container py-5">
       <h1 className="text-center mb-4">Registro</h1>
+
+      {errorPassword && (
+        <p className="text-danger text-center">{errorPassword}</p>
+      )}
 
       <form
         onSubmit={handleSubmit}
@@ -51,6 +59,7 @@ function RegisterPage() {
             placeholder="Tu nombre"
             value={form.name}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -64,6 +73,7 @@ function RegisterPage() {
             placeholder="julio@profesor.com"
             value={form.email}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -77,6 +87,7 @@ function RegisterPage() {
             placeholder="Nombre de usuario"
             value={form.username}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -90,6 +101,7 @@ function RegisterPage() {
             placeholder="Contraseña"
             value={form.password}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -103,6 +115,7 @@ function RegisterPage() {
             placeholder="Repite tu contraseña"
             value={form.repeatPassword}
             onChange={handleChange}
+            required
           />
         </div>
 
@@ -112,24 +125,37 @@ function RegisterPage() {
             id="bio"
             name="bio"
             className="form-control"
-            placeholder="Cuéntanos algo sobre  ti"
+            placeholder="Cuéntanos algo sobre ti"
             value={form.bio}
             onChange={handleChange}
+            required
           ></textarea>
         </div>
 
         <div className="mb-3">
-          <label htmlFor="avatar" className="form-label">Avatar</label>
+          <label htmlFor="avatar" className="form-label">Avatar (URL)</label>
           <input
             id="avatar"
             type="text"
             name="avatar"
             className="form-control"
-            placeholder="url de tu imagen"
+            placeholder="URL de tu imagen"
             value={form.avatar}
             onChange={handleChange}
+            required
           />
         </div>
+
+        {form.avatar && (
+          <div className="text-center mb-4">
+            <img
+              src={form.avatar}
+              alt="Preview del avatar"
+              className="img-thumbnail"
+              style={{ maxWidth: "150px" }}
+            />
+          </div>
+        )}
 
         <button type="submit" className="btn btn-primary w-100">
           Registrarse
